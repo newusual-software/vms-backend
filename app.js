@@ -1,37 +1,34 @@
-const express = require('express')
-const app = express()
-require('dotenv').config()
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
-const morgan = require('morgan')
-const { MongoClient, ServerApiVersion } = require('mongodb');
-//import route
+const express = require('express');
+const app = express();
+require('dotenv').config();
+const mongoose = require('mongoose');
+const morgan = require('morgan');
 
-const userRoute = require('./routes/user')
+// import route
+const userRoute = require('./routes/user');
 
-const uri = process.env.DATABASE;
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'connection error:'));
-
-db.once('open', function(){
-    console.log('Mongodb Database connected')
+mongoose.connect(process.env.DATABASE, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
 })
+  .then(() => console.log('DB connected'))
+  .catch((err) => console.log(err));
 
-//middleware
+// Middleware
+app.use(express.json());
+app.use(morgan('dev'));
 
-app.use(morgan('dev'))
-app.use(bodyParser.json())
+// Route middleware
+app.use('/api', userRoute);
 
-//Route middleware
-app.use('/api', userRoute)
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ success: false, message: "Internal Server Error" });
+});
 
 const port = process.env.PORT || 8080;
-
-app.listen(port, ()=>{
-    console.log(`app is running ${port}`)
-})
+app.listen(port, () => {
+  console.log(`App is running on port ${port}`);
+});
