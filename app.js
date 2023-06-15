@@ -12,9 +12,7 @@ const userRoute = require('./routes/user');
 
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  createIndexes: true, 
+  useUnifiedTopology: true
 })
   .then(() => console.log('DB connected'))
   .catch((err) => console.log(err));
