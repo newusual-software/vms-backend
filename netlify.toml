@@ -1,0 +1,3 @@
+[build]
+  command = "yarn build" # Replace with your build command
+  publish = "dist" # Replace with the directory containing your static build files
