@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cookieParser = require("cookie-parser")
 const errorHandler = require("./middlewares/error")
+const cors = require("cors")
 
 // import route
 const userRoute = require('./routes/user');
@@ -23,6 +24,7 @@ app.use(morgan('dev'));
 app.use(cookieParser({
   expires: new Date(Date.now() + 24 * 60 * 60 * 1000) // Set the expiration to one day from now
 }));
+app.use(cors())
 
 // Route middleware
 app.use('/api', userRoute);
