@@ -1,6 +1,33 @@
 const Visitor = require("../models/visitor");
 const ErrorResponse = require("../utils/errorResponse");
 
+
+//load all users
+exports.allVisitor = async (req, res, next) => {
+
+    const pageSize = 15;
+    const page = Number(req.query.pageNumber) || 1;
+    const count = await Visitor.find({}).estimatedDocumentCount();
+
+    try {
+        const visitors = await Visitor.find()
+          .sort({ createdAt: -1 })
+          .skip(pageSize * (page - 1))
+          .limit(pageSize);
+
+        res.status(200).json({
+            success: true,
+            visitors,
+            page,
+            pages: Math.ceil(count / pageSize),
+            count
+        })
+        next();
+    } catch (error) {
+        return next(new ErrorResponse('Server error', 500));
+    }
+}
+
 exports.signup = async (req, res, next) => {
   const { email } = req.body;
 
