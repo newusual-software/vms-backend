@@ -4,12 +4,9 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
-const errorHandler = require("./middlewares/error");
 const cors = require("cors");
+const adminRoutes = require('./routes/adminRoutes');
 
-// import routes
-const userRoute = require("./routes/user");
-const adminRoute = require("./routes/admin");
 
 mongoose
   .connect(process.env.DATABASE, {
@@ -25,11 +22,9 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(cors());
 
-// Route middleware
-app.use("/api", userRoute);
-app.use("/api/admin", adminRoute);
 
-app.use(errorHandler);
+// Routes
+app.use('/api/admin', adminRoutes);
 
 // Global error handler
 app.use((err, req, res, next) => {
