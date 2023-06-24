@@ -68,10 +68,17 @@ const generateToken = (adminId) => {
 exports.createStaff = async (req, res, next) => {
   try {
     // Get the staff data from the request body
-    const { name, position } = req.body;
+    const { name, position, password } = req.body;
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create the staff
-    const staff = await Staff.create({ name, position });
+    const staff = await Staff.create({
+      name,
+      position,
+      password: hashedPassword,
+    });
 
     // Return the created staff
     res.status(201).json({ success: true, staff });
