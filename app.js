@@ -5,6 +5,10 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const errorHandler = require("./middlewares/error")
+
+// import route
+const visitorRoute = require('./routes/visitor');
 const adminRoutes = require('./routes/adminRoutes');
 
 
@@ -25,6 +29,9 @@ app.use(cors());
 
 // Routes
 app.use('/api/admin', adminRoutes);
+app.use("/api", visitorRoute);
+
+app.use(errorHandler);
 
 // Global error handler
 app.use((err, req, res, next) => {
