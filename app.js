@@ -1,34 +1,35 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-require('dotenv').config();
-const mongoose = require('mongoose');
-const morgan = require('morgan');
-const cookieParser = require("cookie-parser")
-const errorHandler = require("./middlewares/error")
-const cors = require("cors")
+require("dotenv").config();
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const errorHandler = require("./middlewares/error");
+const cors = require("cors");
 
-// import route
-const userRoute = require('./routes/user');
+// import routes
+const userRoute = require("./routes/user");
+const adminRoute = require("./routes/admin");
 
-mongoose.connect(process.env.DATABASE, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log('DB connected'))
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("DB connected"))
   .catch((err) => console.log(err));
 
 // Middleware
 app.use(express.json());
-app.use(morgan('dev'));
-app.use(cookieParser({
-  expires: new Date(Date.now() + 24 * 60 * 60 * 1000) // Set the expiration to one day from now
-}));
-app.use(cors())
+app.use(morgan("dev"));
+app.use(cookieParser());
+app.use(cors());
 
 // Route middleware
-app.use('/api', userRoute);
+app.use("/api", userRoute);
+app.use("/api/admin", adminRoute);
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 // Global error handler
 app.use((err, req, res, next) => {
