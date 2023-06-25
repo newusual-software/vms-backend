@@ -55,6 +55,16 @@ const visitorSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    invited: {
+      type: Boolean,
+      default: false,
+    },
+    duration: {
+      type: String, // or you can use a different data type that suits your needs
+    },
+    staffId: {
+      type: String,
+    },
     createdByStaff: {
       type: Boolean,
       default: false,

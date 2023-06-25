@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const Staff = require("../models/staff");
 const Visitor = require("../models/visitor");
 const nodemailer = require("nodemailer");
+const moment = require("moment");
 const cloudinary = require("cloudinary").v2;
 
 // Configure Cloudinary
@@ -112,28 +113,61 @@ exports.login = async (req, res, next) => {
     next(err);
   }
 };
+
+
 exports.inviteVisitor = async (req, res, next) => {
   try {
-    const { email, staffId } = req.body;
+    const { email, staffId, duration } = req.body;
 
     // Check if any required fields are missing
-    if (!email || !staffId) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Missing required fields" });
+    if (!email || !staffId || !duration) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields: email, staffId, and duration",
+      });
     }
 
     // Check if the staff exists
     const staff = await Staff.findById(staffId);
     if (!staff) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Staff not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Staff not found",
+      });
+    }
+
+    // Check if the visitor exists
+    let visitor = await Visitor.findOne({ email });
+
+    // If the visitor exists and has already been invited, return an error
+    if (visitor && visitor.invited === true) {
+      return res.status(400).json({
+        success: false,
+        message: "Visitor has already been invited",
+      });
+    }
+
+    // If the visitor exists but has not been invited, update the fields
+    if (visitor) {
+      visitor.checkedIn = true;
+      visitor.duration = duration;
+      visitor.invited = true;
+      visitor.staffId = staffId;
+    } else {
+      // Create a new visitor if the email is not found
+      visitor = await Visitor.create({
+        email,
+        checkedIn: true,
+        duration,
+        invited: true,
+        createdByStaff: true,
+        staffAdminId: staffId,
+      });
     }
 
     // Send email invite to the visitor
     const emailSubject = "Invitation to schedule a visit";
-    const emailContent = `Dear Visitor, you are invited to schedule a visit. Please visit our website to schedule a visit.`;
+    const emailContent = `Dear Visitor, you are invited to schedule a visit. The visit duration is ${duration}. Please visit our website to schedule a visit.`;
 
     // Create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
@@ -152,6 +186,9 @@ exports.inviteVisitor = async (req, res, next) => {
       text: emailContent,
     });
 
+    // Save the updated visitor data
+    await visitor.save();
+
     res.status(200).json({
       success: true,
       message: "Invitation sent successfully",
@@ -160,6 +197,9 @@ exports.inviteVisitor = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
 exports.getStaff = async (req, res, next) => {
   try {
     // Get the staff ID from the request parameters

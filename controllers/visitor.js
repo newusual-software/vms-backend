@@ -140,3 +140,59 @@ exports.updateCheckInStatus = async (req, res, next) => {
     next(error);
   }
 };
+// Get all checked-in visitors
+exports.getCheckedInVisitors = async (req, res, next) => {
+  try {
+    const checkedInVisitors = await Visitor.find({ checkedIn: true });
+
+    res.status(200).json({
+      success: true,
+      visitors: checkedInVisitors,
+    });
+  } catch (error) {
+    next(new ErrorResponse("Server error", 500));
+  }
+};
+
+// Get all visitors that are not checked in
+exports.getNotCheckedInVisitors = async (req, res, next) => {
+  try {
+    const notCheckedInVisitors = await Visitor.find({ checkedIn: false });
+
+    res.status(200).json({
+      success: true,
+      visitors: notCheckedInVisitors,
+    });
+  } catch (error) {
+    next(new ErrorResponse("Server error", 500));
+  }
+};
+
+// Get all invited visitors
+exports.getInvitedVisitors = async (req, res, next) => {
+  try {
+    const invitedVisitors = await Visitor.find({ invited : true });
+
+    res.status(200).json({
+      success: true,
+      visitors: invitedVisitors,
+    });
+  } catch (error) {
+    next(new ErrorResponse("Server error", 500));
+  }
+};
+
+// Get all invited visitors
+exports.getNotInvitedVisitors = async (req, res, next) => {
+  try {
+    const nonInvitedVisitors = await Visitor.find({ invited : false });
+
+    res.status(200).json({
+      success: true,
+      visitors: nonInvitedVisitors,
+    });
+    
+  } catch (error) {
+    next(new ErrorResponse("Server error", 500));
+  }
+};
