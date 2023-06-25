@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const errorHandler = require("./middlewares/error")
 
 // import route
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(cors());
+app.use(bodyParser.json());
 
 
 // Routes

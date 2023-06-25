@@ -51,9 +51,21 @@ const visitorSchema = new mongoose.Schema(
       trim: true,
       required: [true, "Please add a Purpose of Visit"],
     },
-    role: {
-      type: Number,
-      default: 0,
+    checkedIn: {
+      type: Boolean,
+      default: false,
+    },
+    createdByStaff: {
+      type: Boolean,
+      default: false,
+    },
+    staffAdminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Staff",
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   { timestamps: true }

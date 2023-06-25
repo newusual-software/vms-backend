@@ -1,9 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const { signup, singleUser, allVisitor } = require("../controllers/visitor");
+const {
+  createVisitor,
+  createVisitorByStaff,
+  getVisitorById,
+  allVisitor,
+  checkVisitorCheckedIn,
+  updateCheckInStatus,
+} = require("../controllers/visitor");
 
-router.post("/signup", signup);
-router.get("/visitor/:id", singleUser);
+router.post("/signup", createVisitor);
+router.post("/signup/staff", createVisitorByStaff);
+router.get("/visitor/:id", getVisitorById);
 router.get("/allvisitor", allVisitor);
+router.get("/visitor/:id/checkedin", checkVisitorCheckedIn);
+router.patch("/visitor/:id/checkin", updateCheckInStatus);
 
 module.exports = router;
