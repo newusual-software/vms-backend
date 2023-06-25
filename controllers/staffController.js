@@ -152,6 +152,7 @@ exports.inviteVisitor = async (req, res, next) => {
       visitor.checkedIn = true;
       visitor.duration = duration;
       visitor.invited = true;
+      visitor.staffId = staffId;
     } else {
       // Create a new visitor if the email is not found
       visitor = await Visitor.create({

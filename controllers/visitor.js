@@ -167,3 +167,32 @@ exports.getNotCheckedInVisitors = async (req, res, next) => {
     next(new ErrorResponse("Server error", 500));
   }
 };
+
+// Get all invited visitors
+exports.getInvitedVisitors = async (req, res, next) => {
+  try {
+    const invitedVisitors = await Visitor.find({ invited : true });
+
+    res.status(200).json({
+      success: true,
+      visitors: invitedVisitors,
+    });
+  } catch (error) {
+    next(new ErrorResponse("Server error", 500));
+  }
+};
+
+// Get all invited visitors
+exports.getNotInvitedVisitors = async (req, res, next) => {
+  try {
+    const nonInvitedVisitors = await Visitor.find({ invited : false });
+
+    res.status(200).json({
+      success: true,
+      visitors: nonInvitedVisitors,
+    });
+    
+  } catch (error) {
+    next(new ErrorResponse("Server error", 500));
+  }
+};

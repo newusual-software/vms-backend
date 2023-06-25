@@ -62,6 +62,9 @@ const visitorSchema = new mongoose.Schema(
     duration: {
       type: String, // or you can use a different data type that suits your needs
     },
+    staffId: {
+      type: String,
+    },
     createdByStaff: {
       type: Boolean,
       default: false,
