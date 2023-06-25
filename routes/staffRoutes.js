@@ -1,13 +1,9 @@
 const express = require("express");
-const staffController = require("../controllers/staffController");
-const { isAuthenticated, isAdmin } = require("../middlewares/authMiddleware");
-
 const router = express.Router();
+const { createStaff, login, inviteVisitor } = require("../controllers/staffController");
 
-// Register a new admin
-router.post("/register", staffController.createStaff);
-
-// Admin login
-router.post("/login", staffController.login);
+router.post("/signup", createStaff);
+router.post("/login", login);
+router.post("/invite", inviteVisitor);
 
 module.exports = router;
