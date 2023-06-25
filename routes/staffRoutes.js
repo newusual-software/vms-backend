@@ -10,8 +10,8 @@ const {
 
 router.post("/signup", createStaff);
 router.post("/login", login);
-router.post("/invite", inviteVisitor);
-router.get("/allStaff", allStaff); // Reordered route
+router.patch("/invite", inviteVisitor); // Updated to use PATCH method
+router.get("/allStaff", allStaff);
 router.get("/:staffId", getStaff);
 
 module.exports = router;

@@ -58,6 +58,9 @@ const staffSchema = new mongoose.Schema(
     profileImage: {
       type: String,
     },
+    duration: {
+      type: String, // or you can use a different data type that suits your needs
+    },
   },
   { timestamps: true }
 );
