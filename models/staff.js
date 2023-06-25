@@ -2,11 +2,17 @@ const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema(
   {
-    name: {
+    email: {
       type: String,
-      required: true,
+      trim: true,
+      required: [true, "Please add an Email"],
+      unique: true,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please add a valid Email",
+      ],
     },
-    position: {
+    password: {
       type: String,
       required: true,
     },

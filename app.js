@@ -10,6 +10,7 @@ const errorHandler = require("./middlewares/error")
 // import route
 const visitorRoute = require('./routes/visitor');
 const adminRoutes = require('./routes/adminRoutes');
+const staffRoutes = require('./routes/staffRoutes');
 
 
 mongoose
@@ -29,6 +30,7 @@ app.use(cors());
 
 // Routes
 app.use('/api/admin', adminRoutes);
+app.use("/api/staff", staffRoutes);
 app.use("/api", visitorRoute);
 
 app.use(errorHandler);
