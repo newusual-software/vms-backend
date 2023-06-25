@@ -160,3 +160,46 @@ exports.inviteVisitor = async (req, res, next) => {
     next(err);
   }
 };
+exports.getStaff = async (req, res, next) => {
+  try {
+    // Get the staff ID from the request parameters
+    const { staffId } = req.params;
+
+    // Find the staff by ID
+    const staff = await Staff.findById(staffId);
+
+    // If the staff is not found, return an error
+    if (!staff) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Staff not found" });
+    }
+
+    // Return the staff information
+    res.status(200).json({ success: true, staff });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.allStaff = async (req, res, next) => {
+  const pageSize = 15;
+  const page = Number(req.query.pageNumber) || 1;
+  try {
+    const count = await Staff.countDocuments({});
+    const staff = await Staff.find()
+      .sort({ createdAt: -1 })
+      .skip(pageSize * (page - 1))
+      .limit(pageSize);
+
+    res.status(200).json({
+      success: true,
+      staff,
+      page,
+      pages: Math.ceil(count / pageSize),
+      count,
+    });
+  } catch (error) {
+    next(new ErrorResponse("Server error", 500));
+  }
+};

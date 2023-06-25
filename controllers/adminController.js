@@ -6,10 +6,10 @@ const Staff = require('../models/staff');
 // Register a new admin
 exports.registerAdmin = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ username });
+    const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
       return res.status(400).json({ message: 'Admin already exists' });
     }
@@ -18,7 +18,7 @@ exports.registerAdmin = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create the admin
-    const admin = await Admin.create({ username, password: hashedPassword });
+    const admin = await Admin.create({ email, password: hashedPassword });
 
     // Generate JWT token
     const token = generateToken(admin._id);
@@ -33,10 +33,10 @@ exports.registerAdmin = async (req, res, next) => {
 // Admin login
 exports.loginAdmin = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // Check if admin exists
-    const admin = await Admin.findOne({ username });
+    const admin = await Admin.findOne({ email });
     if (!admin) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
