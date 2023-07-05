@@ -243,3 +243,59 @@ exports.allStaff = async (req, res, next) => {
     next(new ErrorResponse("Server error", 500));
   }
 };
+
+exports.updateStaff = async (req, res, next) => {
+  try {
+    // Get the staff ID from the request parameters
+    const { staffId } = req.params;
+
+    // Find the staff by ID
+    let staff = await Staff.findById(staffId);
+
+    // If the staff is not found, return an error
+    if (!staff) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Staff not found" });
+    }
+
+    // Get the updated staff data from the request body
+    const {
+      fullName,
+      email,
+      password,
+      phone,
+      address,
+      employerId,
+      department,
+      dob,
+      gender,
+      profileImage,
+    } = req.body;
+
+    // Update the staff data
+    staff.fullName = fullName || staff.fullName;
+    staff.email = email || staff.email;
+    staff.phone = phone || staff.phone;
+    staff.address = address || staff.address;
+    staff.employerId = employerId || staff.employerId;
+    staff.department = department || staff.department;
+    staff.dob = dob || staff.dob;
+    staff.gender = gender || staff.gender;
+    staff.profileImage = profileImage || staff.profileImage;
+
+    // Update the password if it's provided
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      staff.password = hashedPassword;
+    }
+
+    // Save the updated staff data
+    await staff.save();
+
+    // Return the updated staff information
+    res.status(200).json({ success: true, staff });
+  } catch (err) {
+    next(err);
+  }
+};
